@@ -28,4 +28,7 @@ public class Player {
     @NotBlank(message = "Player link cannot be blank")
     @URL(message = "Link URL is not valid")
     private String link;
+
+    @NotNull
+    private PlayerCategory category;
 }

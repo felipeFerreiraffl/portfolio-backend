@@ -34,6 +34,7 @@ public class PlayerService {
         existing.setName(pyr.getName());
         existing.setImgSrc(pyr.getImgSrc());
         existing.setLink(pyr.getLink());
+        existing.setCategory(pyr.getCategory());
 
         return repo.save(existing);
     }
