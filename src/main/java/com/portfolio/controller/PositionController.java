@@ -5,7 +5,6 @@ import com.portfolio.service.PositionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,5 +38,11 @@ public class PositionController {
     public ResponseEntity<Position> update(@PathVariable String id, @RequestBody @Valid Position pos) {
         Position updated = serv.update(id, pos);
         return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Position> delete(@PathVariable String id) {
+        serv.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

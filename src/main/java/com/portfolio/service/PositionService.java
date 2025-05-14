@@ -35,6 +35,11 @@ public class PositionService {
         return repo.save(existing);
     }
 
-    public void delete() {
+    public void delete(String id) {
+        if (!repo.existsById(id)) {
+            throw new RuntimeException("Object not found.");
+        }
+
+        repo.deleteById(id);
     }
 }
