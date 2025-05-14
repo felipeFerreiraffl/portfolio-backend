@@ -26,7 +26,13 @@ public class PositionService {
         return repo.save(pos);
     }
 
-    public void update() {
+    public Position update(String id, Position pos) {
+        Position existing = repo.findById(id).orElseThrow(() -> new RuntimeException("Object not found."));
+        existing.setName(pos.getName());
+        existing.setAbbr(pos.getAbbr());
+        existing.setDesc(pos.getDesc());
+
+        return repo.save(existing);
     }
 
     public void delete() {

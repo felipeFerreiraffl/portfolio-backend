@@ -31,7 +31,13 @@ public class PositionController {
 
     @PostMapping
     public ResponseEntity<Position> create(@RequestBody @Valid Position pos) {
-        Position p = serv.create(pos);
-        return ResponseEntity.status(HttpStatus.CREATED).body(p);
+        Position created = serv.create(pos);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Position> update(@PathVariable String id, @RequestBody @Valid Position pos) {
+        Position updated = serv.update(id, pos);
+        return ResponseEntity.ok(updated);
     }
 }
