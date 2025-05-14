@@ -25,13 +25,13 @@ public class PositionController {
     @GetMapping("/{id}")
     public ResponseEntity<Position> findById(@PathVariable String id) {
         Position pos = serv.findById(id);
-        return ResponseEntity.ok(pos);
+        return ResponseEntity.ok(pos); // HTTP 200
     }
 
     @PostMapping
     public ResponseEntity<Position> create(@RequestBody @Valid Position pos) {
         Position created = serv.create(pos);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created); // HTTP 201
     }
 
     @PutMapping("/{id}")
@@ -43,6 +43,6 @@ public class PositionController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Position> delete(@PathVariable String id) {
         serv.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build(); // HTTP 204
     }
 }

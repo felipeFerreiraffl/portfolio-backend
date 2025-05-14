@@ -8,24 +8,29 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+// Serviço para controller
 @Service
 public class PositionService {
 
     @Autowired
     private PositionRepository repo;
 
+    // GET
     public List<Position> findAll() {
         return repo.findAll();
     }
 
+    // GET
     public Position findById(String id) {
         return repo.findById(id).orElseThrow(() -> new RuntimeException("Position not found."));
     }
 
+    // POST
     public Position create(Position pos) {
         return repo.save(pos);
     }
 
+    // PUT
     public Position update(String id, Position pos) {
         Position existing = repo.findById(id).orElseThrow(() -> new RuntimeException("Object not found."));
         existing.setName(pos.getName());
@@ -35,6 +40,7 @@ public class PositionService {
         return repo.save(existing);
     }
 
+    // DELETE
     public void delete(String id) {
         if (!repo.existsById(id)) {
             throw new RuntimeException("Object not found.");
