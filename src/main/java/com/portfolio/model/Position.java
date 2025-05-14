@@ -23,7 +23,6 @@ public class Position {
     private String name;
 
     @NotNull
-    @Size(max = 3, min = 2, message = "A sigla deve ter 2 ou 3 letras!")
     private PositionAbbr abbr;
 
     @NotNull

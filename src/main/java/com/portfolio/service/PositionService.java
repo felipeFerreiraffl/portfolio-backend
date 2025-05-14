@@ -22,7 +22,8 @@ public class PositionService {
         return repo.findById(id).orElseThrow(() -> new RuntimeException("Position not found."));
     }
 
-    public void create() {
+    public Position create(Position pos) {
+        return repo.save(pos);
     }
 
     public void update() {
