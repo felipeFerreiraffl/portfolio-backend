@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/position")
+@RequestMapping("/api/position")
 public class PositionController {
 
     @Autowired
@@ -28,6 +28,7 @@ public class PositionController {
     @GetMapping("/{id}")
     public ResponseEntity<Position> findById(@PathVariable String id) {
         Position pos = serv.findById(id);
+        System.out.println("Position: " + pos);
         return ResponseEntity.ok(pos);
     }
 }
