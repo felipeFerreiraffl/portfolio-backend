@@ -11,6 +11,7 @@ public class PortfolioApplication {
         // Configuração do arquivo .env
         Dotenv dotenv = Dotenv.load();
         System.setProperty("spring.data.mongodb.uri", dotenv.get("MONGODB_URI"));
+        System.setProperty("api.rawg.key", dotenv.get("RAWG_KEY"));
 
         SpringApplication.run(PortfolioApplication.class, args);
     }
