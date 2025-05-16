@@ -12,5 +12,8 @@ COPY --from=build /app/target/portfolio-0.0.1-SNAPSHOT.jar app.jar
 # Exponha a porta 8080
 EXPOSE 8080
 
-# Comando para rodar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Criação do application.properties real
+ENTRYPOINT ["/bin/sh", "-c", "echo \"spring.data.mongodb.uri=${MONGODB_URI}\" > application.properties && \
+echo \"api.rawg.key=${RAWG_API_KEY}\" >> application.properties && \
+mkdir -p config && mv application.properties config/ && \
+java -Dspring.config.additional-location=file:./config/ -jar app.jar"]

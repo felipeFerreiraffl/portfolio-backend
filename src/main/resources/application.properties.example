@@ -1,0 +1,2 @@
+spring.data.mongodb.uri=${MONGODB_URI}
+api.rawg.key=${RAWG_API_KEY}
