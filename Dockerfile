@@ -15,5 +15,6 @@ EXPOSE 8080
 # Criação do application.properties real
 ENTRYPOINT ["/bin/sh", "-c", "echo \"spring.data.mongodb.uri=${MONGODB_URI}\" > application.properties && \
 echo \"api.rawg.key=${RAWG_API_KEY}\" >> application.properties && \
+echo \"api.rawg.url=${RAWG_API_URL}\" >> application.properties && \
 mkdir -p config && mv application.properties config/ && \
 java -Dspring.config.additional-location=file:./config/ -jar app.jar"]
