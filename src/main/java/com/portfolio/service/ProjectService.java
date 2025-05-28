@@ -31,7 +31,8 @@ public class ProjectService {
     // PUT
     public Project update(String id, Project proj) {
         Project existing = repo.findById(id).orElseThrow(() -> new RuntimeException("Object not found."));
-        existing.setName(proj.getName());
+        existing.setName_pt(proj.getName_pt());
+        existing.setName_en(proj.getName_en());
         existing.setImgSrc(proj.getImgSrc());
         existing.setGithub(proj.getGithub());
 

@@ -19,7 +19,10 @@ public class Project {
     private String id;
 
     @NotNull
-    private String name;
+    private String name_pt;
+
+    @NotNull
+    private String name_en;
 
     @NotBlank(message = "Image source cannot be blank")
     @URL(message = "Image URL is not valid")
