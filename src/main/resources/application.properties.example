@@ -1,3 +1,4 @@
 spring.data.mongodb.uri=${MONGODB_URI}
+api.jikan.url=${JIKAN_API_URL}
 api.rawg.key=${RAWG_API_KEY}
 api.rawg.url=${RAWG_API_URL}
