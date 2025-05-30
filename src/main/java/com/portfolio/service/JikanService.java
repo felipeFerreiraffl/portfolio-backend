@@ -11,11 +11,16 @@ import java.net.URI;
 @Service
 public class JikanService {
 
-    private final RestTemplate restTemplate = new RestTemplate();
-    private final JikanRateLimit rateLimit = new JikanRateLimit();
+    private final RestTemplate restTemplate;
+    private final JikanRateLimit rateLimit;
 
     @Value("${api.jikan.url}")
     private String jikanApiUrl;
+
+    public JikanService(JikanRateLimit rateLimit) {
+        this.restTemplate = new RestTemplate();
+        this.rateLimit = rateLimit;
+    }
 
     // Busca um anime pelo ID
     public String getAnimeById(int id) {
