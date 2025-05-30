@@ -43,7 +43,7 @@ public class JikanService {
         }
 
         URI uri = UriComponentsBuilder
-                .fromUriString(jikanApiUrl + "/anime")
+                .fromUriString(jikanApiUrl + "/top/anime")
                 .queryParam("filter", filter)
                 .queryParam("limit", limit)
                 .build()
@@ -73,7 +73,7 @@ public class JikanService {
         }
 
         URI uri = UriComponentsBuilder
-                .fromUriString(jikanApiUrl + "/manga")
+                .fromUriString(jikanApiUrl + "/top/manga")
                 .queryParam("filter", filter)
                 .queryParam("limit", limit)
                 .build()
