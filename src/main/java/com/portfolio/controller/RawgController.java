@@ -1,6 +1,7 @@
 package com.portfolio.controller;
 
 import com.portfolio.service.RawgService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,12 +15,14 @@ public class RawgController {
         this.serv = serv;
     }
 
+    @Cacheable("games")
     @GetMapping("/{id}")
     public ResponseEntity<String> getGameById(@PathVariable int id) {
         String response = serv.getGameById(id);
         return ResponseEntity.ok(response);
     }
 
+    @Cacheable("games-filter")
     @GetMapping("/filter")
     public ResponseEntity<String> getGamesByFilter(@RequestParam String ordering, @RequestParam int pageSize) {
         String response = serv.getGamesByFilter(ordering, pageSize);
