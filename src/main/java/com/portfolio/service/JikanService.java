@@ -2,7 +2,10 @@ package com.portfolio.service;
 
 import com.portfolio.config.JikanRateLimit;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -23,6 +26,11 @@ public class JikanService {
     }
 
     // Busca um anime pelo ID
+    @Retryable(
+            value = {RestClientException.class}, // Classes de exceções que disparam retry
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 2500) // 2000ms entre cada tentativa
+    )
     public String getAnimeById(int id) {
         if (!rateLimit.tryConsume()) {
             throw new RuntimeException("Limite de requisições atingido. Tente novamente mais tarde.");
@@ -37,6 +45,11 @@ public class JikanService {
     }
 
     // Busca animes por filtro (popularidade, nota, etc)
+    @Retryable(
+            value = {RestClientException.class}, // Classes de exceções que disparam retry
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 2500) // 2000ms entre cada tentativa
+    )
     public String getAnimesByFilter(String filter, int limit) {
         if (!rateLimit.tryConsume()) {
             throw new RuntimeException("Limite de requisições atingido. Tente novamente mais tarde.");
@@ -49,10 +62,16 @@ public class JikanService {
                 .build()
                 .toUri();
 
+
         return restTemplate.getForObject(uri, String.class);
     }
 
     // Busca um mangá pelo ID
+    @Retryable(
+            value = {RestClientException.class}, // Classes de exceções que disparam retry
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 2500) // 2000ms entre cada tentativa
+    )
     public String getMangaById(int id) {
         if (!rateLimit.tryConsume()) {
             throw new RuntimeException("Limite de requisições atingido. Tente novamente mais tarde.");
@@ -67,6 +86,11 @@ public class JikanService {
     }
 
     // Busca mangá por filtro (popularidade, nota, etc)
+    @Retryable(
+            value = {RestClientException.class}, // Classes de exceções que disparam retry
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 2500) // 2000ms entre cada tentativa
+    )
     public String getMangasByFilter(String filter, int limit) {
         if (!rateLimit.tryConsume()) {
             throw new RuntimeException("Limite de requisições atingido. Tente novamente mais tarde.");
@@ -80,5 +104,10 @@ public class JikanService {
                 .toUri();
 
         return restTemplate.getForObject(uri, String.class);
+    }
+
+    // Fallback caso o retry falhe
+    public String recover(RestClientException e, String filter, int limit) {
+        return "{\"message\" : \"API temporariamente indisponível. Tente novamente mais tarde.\"}";
     }
 }
