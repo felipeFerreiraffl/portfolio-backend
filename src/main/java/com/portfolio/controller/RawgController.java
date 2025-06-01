@@ -15,14 +15,14 @@ public class RawgController {
         this.serv = serv;
     }
 
-    @Cacheable("games")
+    @Cacheable(value = "games", key = "#id")
     @GetMapping("/{id}")
     public ResponseEntity<String> getGameById(@PathVariable int id) {
         String response = serv.getGameById(id);
         return ResponseEntity.ok(response);
     }
 
-    @Cacheable("games-filter")
+    @Cacheable(value = "games-filter", key = "#ordering + '_' + #pageSize")
     @GetMapping("/filter")
     public ResponseEntity<String> getGamesByFilter(@RequestParam String ordering, @RequestParam int pageSize) {
         String response = serv.getGamesByFilter(ordering, pageSize);
