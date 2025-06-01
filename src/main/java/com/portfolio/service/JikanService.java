@@ -2,11 +2,13 @@ package com.portfolio.service;
 
 import com.portfolio.config.JikanRateLimit;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -33,15 +35,21 @@ public class JikanService {
     )
     public String getAnimeById(int id) {
         if (!rateLimit.tryConsume()) {
-            throw new RuntimeException("Limite de requisições atingido. Tente novamente mais tarde.");
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Limite de requisições");
         }
 
+        // Constrói a URI para o path da Jikan
         URI uri = UriComponentsBuilder
                 .fromUriString(jikanApiUrl + "/anime/" + id)
                 .build()
                 .toUri();
 
-        return restTemplate.getForObject(uri, String.class);
+        try {
+            return restTemplate.getForObject(uri, String.class);
+
+        } catch (RestClientException e) {
+            throw new RuntimeException("Erro ao buscar dados da Jikan pelo ID: " + e.getMessage(), e);
+        }
     }
 
     // Busca animes por filtro (popularidade, nota, etc)
@@ -52,18 +60,27 @@ public class JikanService {
     )
     public String getAnimesByFilter(String filter, int limit) {
         if (!rateLimit.tryConsume()) {
-            throw new RuntimeException("Limite de requisições atingido. Tente novamente mais tarde.");
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Limite de requisições");
         }
 
-        URI uri = UriComponentsBuilder
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder
                 .fromUriString(jikanApiUrl + "/top/anime")
-                .queryParam("filter", filter)
-                .queryParam("limit", limit)
-                .build()
-                .toUri();
+                .queryParam("limit", limit);
+
+        // Inclui filter caso não seja nula, se não, fica vazio (retorna por nota)
+        if (filter != null && !filter.isBlank()) {
+            uriBuilder.queryParam("filter", filter);
+        }
+
+        URI uri = uriBuilder.build().toUri();
 
 
-        return restTemplate.getForObject(uri, String.class);
+        try {
+            return restTemplate.getForObject(uri, String.class);
+
+        } catch (RestClientException e) {
+            throw new RuntimeException("Erro ao buscar dados da Jikan pelo ID: " + e.getMessage(), e);
+        }
     }
 
     // Busca um mangá pelo ID
@@ -74,7 +91,7 @@ public class JikanService {
     )
     public String getMangaById(int id) {
         if (!rateLimit.tryConsume()) {
-            throw new RuntimeException("Limite de requisições atingido. Tente novamente mais tarde.");
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Limite de requisições");
         }
 
         URI uri = UriComponentsBuilder
@@ -82,7 +99,12 @@ public class JikanService {
                 .build()
                 .toUri();
 
-        return restTemplate.getForObject(uri, String.class);
+        try {
+            return restTemplate.getForObject(uri, String.class);
+
+        } catch (RestClientException e) {
+            throw new RuntimeException("Erro ao buscar dados da Jikan pelo ID: " + e.getMessage(), e);
+        }
     }
 
     // Busca mangá por filtro (popularidade, nota, etc)
@@ -93,17 +115,26 @@ public class JikanService {
     )
     public String getMangasByFilter(String filter, int limit) {
         if (!rateLimit.tryConsume()) {
-            throw new RuntimeException("Limite de requisições atingido. Tente novamente mais tarde.");
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Limite de requisições");
         }
 
-        URI uri = UriComponentsBuilder
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder
                 .fromUriString(jikanApiUrl + "/top/manga")
-                .queryParam("filter", filter)
-                .queryParam("limit", limit)
-                .build()
-                .toUri();
+                .queryParam("limit", limit);
 
-        return restTemplate.getForObject(uri, String.class);
+        // Inclui filter caso não seja nula, se não, fica vazio (retorna por nota)
+        if (filter != null && !filter.isBlank()) {
+            uriBuilder.queryParam("filter", filter);
+        }
+
+        URI uri = uriBuilder.build().toUri();
+
+        try {
+            return restTemplate.getForObject(uri, String.class);
+
+        } catch (RestClientException e) {
+            throw new RuntimeException("Erro ao buscar dados da Jikan pelo ID: " + e.getMessage(), e);
+        }
     }
 
     // Fallback caso o retry falhe
