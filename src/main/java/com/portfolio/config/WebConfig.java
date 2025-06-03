@@ -10,7 +10,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry reg) {
         reg.addMapping("/**")
-                .allowedHeaders("http://localhost:5173/", "http://localhost:4173/") // Adicionar o localhost e o site da Vercel posteriormente
+                .allowedHeaders("*") // Adicionar o localhost e o site da Vercel posteriormente
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedOrigins("*");
     }
