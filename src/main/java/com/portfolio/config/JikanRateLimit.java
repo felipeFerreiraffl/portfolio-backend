@@ -15,11 +15,20 @@ public class JikanRateLimit {
     // Limite de requisições da API da Jikan
     public JikanRateLimit() {
         // Configuração de limite
-        Bandwidth limit = Bandwidth.classic(
-                60, // tokens (requisições) máximos
-                Refill.intervally(60, Duration.ofMinutes(1))); // recarga
+        // Primeira configuração
+        Bandwidth firstLimit = Bandwidth.classic(
+                3, // tokens (requisições) máximos
+                Refill.intervally(3, Duration.ofSeconds(1)));
 
-        this.bucket = Bucket.builder().addLimit(limit).build();
+        // Limite para evitar sobrecarga (60/min)
+        Bandwidth secondLimit = Bandwidth.classic(
+                60, // tokens (requisições) máximos
+                Refill.intervally(3, Duration.ofMinutes(1))); // recarga
+
+        this.bucket = Bucket.builder()
+                .addLimit(firstLimit)
+                .addLimit(secondLimit)
+                .build();
 
     }
 
@@ -27,5 +36,14 @@ public class JikanRateLimit {
         return bucket.tryConsume(1); // Consome um token
     }
 
+
+    // Métoddo com timeout
+    public boolean tryConsume(long timeoutMs) {
+        try {
+            return bucket.asBlocking().tryConsume(1, Duration.ofMillis(timeoutMs));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }
