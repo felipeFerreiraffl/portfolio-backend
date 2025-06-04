@@ -2,6 +2,8 @@ package com.portfolio.controller;
 
 import com.portfolio.service.JikanService;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,30 +18,54 @@ public class JikanController {
     }
 
     @Cacheable(value = "anime", key = "#id", unless = "#result == null")
-    @GetMapping("/anime/{id}")
+    @GetMapping(value = "/anime/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getAnimeById(@PathVariable int id) {
         String response = serv.getAnimeById(id);
-        return ResponseEntity.ok(response);
+
+        // Definição de header como JSON
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Cache-Control", "public, max-age=3600");
+
+        return ResponseEntity.ok().headers(headers).body(response);
     }
 
     @Cacheable(value = "anime-filter", key = "#filter + '_' + #limit", unless = "#result == null")
-    @GetMapping("/anime/filter")
+    @GetMapping(value = "/anime/filter", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getAnimesByFilter(@RequestParam String filter, @RequestParam int limit) {
         String response = serv.getAnimesByFilter(filter, limit);
-        return ResponseEntity.ok(response);
+
+        // Definição de header como JSON
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Cache-Control", "public, max-age=3600");
+
+        return ResponseEntity.ok().headers(headers).body(response);
     }
 
     @Cacheable(value = "manga", key = "#id", unless = "#result == null")
-    @GetMapping("/manga/{id}")
+    @GetMapping(value = "/manga/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getMangaById(@PathVariable int id) {
         String response = serv.getMangaById(id);
-        return ResponseEntity.ok(response);
+
+        // Definição de header como JSON
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Cache-Control", "public, max-age=3600");
+
+        return ResponseEntity.ok().headers(headers).body(response);
     }
 
     @Cacheable(value = "manga-filter", key = "#filter + '_' + #limit", unless = "#result == null")
-    @GetMapping("/manga/filter")
+    @GetMapping(value = "/manga/filter", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getMangasByFilter(@RequestParam String filter, @RequestParam int limit) {
         String response = serv.getMangasByFilter(filter, limit);
-        return ResponseEntity.ok(response);
+
+        // Definição de header como JSON
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Cache-Control", "public, max-age=3600");
+
+        return ResponseEntity.ok().headers(headers).body(response);
     }
 }

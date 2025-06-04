@@ -38,7 +38,9 @@ public class JikanService {
     )
     public String getAnimeById(int id) {
         if (!rateLimit.tryConsume(2000)) {
-            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Limite de requisições. Tente novamente em alguns segundos. Tente novamente em alguns segundos. Tente novamente em alguns segundos");
+            throw new ResponseStatusException(
+                    HttpStatus.TOO_MANY_REQUESTS,
+                    "Limite de requisições. Tente novamente em alguns segundos.");
         }
 
         // Constrói a URI para o path da Jikan
