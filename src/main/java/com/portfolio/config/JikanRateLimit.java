@@ -16,8 +16,8 @@ public class JikanRateLimit {
     public JikanRateLimit() {
         // Configuração de limite
         Bandwidth limit = Bandwidth.classic(
-                30, // tokens (requisições) máximos
-                Refill.intervally(30, Duration.ofMinutes(1))); // recarga
+                60, // tokens (requisições) máximos
+                Refill.intervally(60, Duration.ofMinutes(1))); // recarga
 
         this.bucket = Bucket.builder().addLimit(limit).build();
 
