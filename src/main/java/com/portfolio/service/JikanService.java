@@ -47,6 +47,12 @@ public class JikanService {
     }
 
     private String makeJikanRequest(URI uri, String context) {
+        if (!rateLimit.tryConsume(10000)) {
+            throw new ResponseStatusException(
+                    HttpStatus.TOO_MANY_REQUESTS,
+                    "Limite de requisições. Tente novamente em alguns segundos.");
+        }
+
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(uri, String.class);
             String responseBody = response.getBody();
@@ -74,11 +80,6 @@ public class JikanService {
             backoff = @Backoff(delay = 1000, multiplier = 2) // Backoff exponencial
     )
     public String getAnimeById(int id) {
-        if (!rateLimit.tryConsume(2000)) {
-            throw new ResponseStatusException(
-                    HttpStatus.TOO_MANY_REQUESTS,
-                    "Limite de requisições. Tente novamente em alguns segundos.");
-        }
 
         // Constrói a URI para o path da Jikan
         URI uri = UriComponentsBuilder
@@ -96,9 +97,6 @@ public class JikanService {
             backoff = @Backoff(delay = 1000, multiplier = 2)
     )
     public String getAnimesByFilter(String filter, int limit) {
-        if (!rateLimit.tryConsume(2000)) {
-            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Limite de requisições. Tente novamente em alguns segundos. Tente novamente em alguns segundos");
-        }
 
         UriComponentsBuilder uriBuilder = UriComponentsBuilder
                 .fromUriString(jikanApiUrl + "/top/anime")
@@ -122,10 +120,6 @@ public class JikanService {
             backoff = @Backoff(delay = 1000, multiplier = 2)
     )
     public String getMangaById(int id) {
-        if (!rateLimit.tryConsume()) {
-            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Limite de requisições. Tente novamente em alguns segundos");
-        }
-
         URI uri = UriComponentsBuilder
                 .fromUriString(jikanApiUrl + "/manga/" + id)
                 .build()
@@ -141,10 +135,6 @@ public class JikanService {
             backoff = @Backoff(delay = 1000, multiplier = 2)
     )
     public String getMangasByFilter(String filter, int limit) {
-        if (!rateLimit.tryConsume()) {
-            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Limite de requisições. Tente novamente em alguns segundos");
-        }
-
         UriComponentsBuilder uriBuilder = UriComponentsBuilder
                 .fromUriString(jikanApiUrl + "/top/manga")
                 .queryParam("limit", limit);
