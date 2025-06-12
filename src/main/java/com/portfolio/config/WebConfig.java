@@ -14,9 +14,11 @@ public class WebConfig implements WebMvcConfigurer {
         reg.addMapping("/**")
                 .allowedHeaders("*") // Adicionar o localhost e o site da Vercel posteriormente
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
-                .allowedOrigins("https://portfolio-lyart-rho-77.vercel.app/")
+                .allowedOrigins("https://portfolio-lyart-rho-77.vercel.app/", "http://localhost:5173/")
                 .allowCredentials(false)
                 .exposedHeaders("Content-Type", "Cache-Control")
                 .maxAge(3600);
     }
 }
+
+// http://localhost:5173/
